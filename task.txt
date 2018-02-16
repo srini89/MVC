@@ -1,0 +1,13 @@
+Here are the things I’ve thought of so far which I think should be set up on our developers’ computers.
+
+-	The service ‘ASP.NET State Server’ should be started and configured to always start with Windows.
+-	Crystal Reports for Visual Studio should be installed on top of Visual Studio. I don’t know of a version which works on VS 2017 but Brian does. The version located here will work on VS 2015: \\Imgnas1\vol1\HOMEDIRS\BarrySmith\2017-11-07\
+-	Crystal Reports Runtime x86 should be installed (available here: \\Imgnas1\vol1\HOMEDIRS\BarrySmith\2017-11-07\ )
+-	They should have Git installed. This does come with Visual Studio; however, I like to install Git (from https://git-scm.com/download/win ) on top of that anyway because it seems to be more full-fledged and includes Git Bash.
+-	They should have Notepad++ installed.
+-	In Outlook, they should have access to the calendar ‘VWPF-IT Calendar’ which is the shared calendar for the IT department.
+-	In Outlook, they should have access to see the mailbox ‘VW-Webmaster’ which is where errors are emailed to.
+-	They need to have a record created for their user in the table Security.dbo.UserInfo and the associated tables such as Security.dbo.UserAIMSAbilities. I’m not sure of van Wagenen’s official way of creating new users – I think I created my user record from scratch and when I was onboarding Brian I had him copy my user record.
+-	Permissions on various databases and in AIMS may have to be set up so that the user can run and log in to AIMS.
+-	The user should have read/write permission on the Test folder: \\Imgnas1\vol1\PRODUCTION\Test\
+-	It would be nice if we could clone the git repository from here: https://bitbucket.org/bankers-ondemand/aims-legacy
