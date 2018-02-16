@@ -1,0 +1,29 @@
+﻿@model VanWagenen.Dvc.Web.ViewModels.DocumentViewModel
+
+@using (Html.BeginCollectionItem("Documents"))
+{
+    <div class="AdditionalFileUpload">
+        <div class="row" style="padding-left:2em">
+            <div class="col-xs-5">
+                @Html.LabelFor(model => model.Document.DocumentType, "Document Type")
+                @Html.DropDownListFor(model => model.Document.DocumentType, Model.DocumentTypes, new { @class = "document-type form-control", title = "Choose one of the following..." })
+            </div>
+            <div class="col-xs-7 other-description">
+                @Html.LabelFor(model => model.Document.OtherTypeDescription, "Description")
+                @Html.TextBoxFor(model => model.Document.OtherTypeDescription, new { @class = "form-control", maxlength = "150" })
+            </div>
+        </div>
+        <br />
+        <div class="row" style="padding-left:2em">
+            <div class="col-sm-3 control-label">
+                <label for="formGroupInputLarge1">Filename:</label>
+            </div>
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.AttachedFileInput,
+                    new {htmlAttributes = new {style = "display:inline", type = "file" } })
+                <span class="btn btn-default fa fa-trash-o DeleteFileInput" aria-hidden="true"></span> <br/>
+                @Html.HiddenFor(m => m.AttachedFileName, new { @class = "AttachedFileName" })
+            </div>
+        </div>
+    </div>
+}

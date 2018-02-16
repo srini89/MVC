@@ -1,0 +1,33 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+@model VanWagenen.Dvc.Repository.Models.vAccidentScreening
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="error">@ViewBag.ErrorMessage</div>
+}
+else
+{
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Police Report for VIN @Model.VIN</h4>
+            </div>
+            <div class="col-lg-6">
+                @Ajax.ActionLink("Close No Claim", "DetailsClose", new {id = Model.ClientVehicleId}, new AjaxOptions {UpdateTargetId = "create", HttpMethod = "GET"}, new {@class = "btn btn-default"})
+                @Ajax.ActionLink("Create Claim", "DetailsCreate", new {id = Model.ClientVehicleId}, new AjaxOptions {UpdateTargetId = "create", HttpMethod = "GET"}, new {@class = "btn btn-default"})
+                <button type="button" name="ClosePoliceReport" id="ClosePoliceReport" data-clientvehicleid="@Model.ClientVehicleId" value="" class="btn btn-default">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h6><span style="font-weight: 600">Accident Description: </span>@Model.ActivityDescription</h6>
+            </div>
+        </div>
+        <div class="row">
+            <iframe style="min-width: 60em; height: 65em; border: 0" src="@Url.Action("DownloadPoliceReport", "Claim", new {id = Model.Id})"></iframe>
+        </div>
+    </div>
+}
+

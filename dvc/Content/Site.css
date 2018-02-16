@@ -1,0 +1,523 @@
+﻿body {
+    padding-top: 55px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+
+select, textarea
+ {
+    max-width: 280px;
+      
+}
+
+input
+ {
+    max-width: 280px;
+    padding-left: 5px;      
+}
+
+
+input.xsmall-input{
+  width: 50px;  
+}
+input.xsmallRO-input{
+  width: 50px;  
+  background-color: #eee;
+  
+}
+input.small-input{
+  width: 100px;  
+}
+input.smallRO-input{
+  width: 100px;  
+  background-color: #eee;
+}
+input.medium-input{
+  width: 200px;  
+}
+input.large-input{
+  width: 300px;  
+}
+input.xlarge-input{
+  width: 400px;  
+}
+
+
+.claim-header-row {
+    position:fixed; 
+    top:50.4px;
+    z-index:99;
+    background-color:white;
+    width:100%;
+    border-bottom: 1px solid #ddd;
+    padding: 2px;
+    font-size: 12px;
+}
+
+.work-queue-column {
+    padding: 0 2em 0 0;
+}
+
+.advSrchAttachIcon:hover{
+    color: purple;
+    font-size: 1.5em;
+}
+
+#charCounter {
+    color: lightgray;
+    font-size: small;
+}
+ .verticalLine {
+    border-right: 1px solid black 
+  }
+
+.dvcStats {
+    background-color: #eaeaea;
+    margin: .5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    line-height: 3em;
+    font-weight: bold;
+}
+
+.dvcStats > span {
+    display: block;
+    float: right;
+    height: 2.5em;
+    line-height: 2.5em;
+    background-color: #fff;
+    color: #666;
+    text-align: center;
+    margin-top: .25em;
+}
+
+.dashboardInteger {
+    width: 2.5em;
+    border-radius: 50%;
+}
+
+.dashboardMoney {
+    width: 7em;
+    border-radius: 25px;
+    background-color: #fff;
+}
+
+.popover {
+    max-width: none;
+}
+.padding-none {
+    padding: 0px !important;
+}
+.padding-sm {
+    padding: 2px !important;
+}
+.padding-md {
+    padding: 5px !important;
+}
+.history-item {
+    border-radius: 8px;
+    width: 260px;
+    height: 110px;
+    float: left;
+    margin-top: 10px;
+}
+.state-history-item {
+    border: solid 1px darkgreen;
+    background-color: palegreen;
+}
+.note-history-item {
+    border: solid 1px gold;
+    background-color: lightgoldenrodyellow;
+}
+.review-history-item {
+    border: solid 1px #337ab7;
+    background-color: #b5dbfc;
+}
+
+.doc-history-item {
+    border: solid 1px darkgray;
+    background-color: gainsboro;
+}
+.history-arrow {
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+    height: 110px;
+    margin-top: 10px;
+}
+.history-doc-type, .history-state-desc {
+    margin-left: 10px;
+}
+.history-arrow-span {
+    margin-top: 40px;
+    font-size: 20px;
+}
+.history-label {
+    padding-right: 2px !important;
+    padding-left: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 2px !important;
+    margin-bottom: 0px !important;
+}
+.history-filter {
+    float: left !important;
+    width: 150px !important;
+}
+.float-left {
+    float: left;
+}
+.clear-both {
+    clear: both;
+}
+.ui-datepicker-calendar {
+    display: none;
+}
+.report-header {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+.error, .error-sm {
+    color: red;
+    font-weight: bold;
+}
+.error-sm {
+    font-size: small;
+}
+.status-message, .status-message-sm {
+    font-weight: bold;
+}
+.status-messasge-sm {
+    font-size: small;
+}
+.report-status {
+    font-weight: bold;
+    color: #337ab7;
+    padding-left: 15px;
+}
+.billing-report-buttons {
+    margin-top: 25px;
+}
+.billing-report-filter {
+    width: 135px;
+    padding-left: 5px;
+}
+.billing-report {
+    margin-left: 5px;
+}
+.report-total {
+    font-weight: bold;
+}
+.report-table {
+    border: thin solid gainsboro;
+    min-width: 1520px;
+}
+.report-body {
+    height: 700px;
+    overflow: scroll;
+    display: inline;
+}
+.report-filter-section {
+    width: 100%;
+    min-width: 1100px; 
+    background-color: gainsboro;
+    margin-bottom: 5px !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    padding: 5px;
+}
+.report-filter {
+    float: left;
+    min-width: 125px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.report-button {
+    float: left;
+    min-width: 85px;
+    padding-top: 25px;
+}
+.post-billing-button {
+    float: right;
+    min-width: 100px;
+    padding-top: 25px;
+}
+
+.report-message {
+    float: left;
+    min-width: 580px;
+    padding-top: 30px;
+}
+.font-smaller {
+    font-size: smaller;
+}
+.table-fixed {
+  width: 100%;
+}
+.table-fixed tbody {
+  height: 650px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed thead th {
+    margin-bottom: -2px;
+    height: 63px;
+}
+
+.table-fixed tbody td {
+  float: left;
+  height: 65px;
+}
+.table-fixed thead tr th {
+  float: left;
+}
+.rowhover {
+    cursor: pointer !important;
+}
+.fixed-header-row {
+    padding-right: 17px;
+}
+.text-gray {
+    color: darkgray;
+}
+.file-icon {
+    color: forestgreen;
+    font-size: 21px !important;
+}
+.file-icon-disabled {
+    color: darkgray;
+    font-size: 20px !important;
+}
+.other-description, .edit-other-description {
+    display: none;
+    padding-bottom: 5px;
+}
+div.unauthorized {
+    margin-top: 45px;
+}
+.dropdown-disabled {
+    background-color: #ebebe4;
+}
+.table-icon {
+    padding: 3px;
+}
+.admin-list-container {
+    padding: 10px;
+}
+.table-button {
+    padding-left: 10px;
+}
+.width-50 {
+    width: 50%;
+}
+.record-lock-container {
+    width: 40%;
+    padding: 5px;
+    float: left;
+}
+.locked-vin {
+    color: gray;
+    font-size: small;
+}
+.field-help {
+    color: gray;
+    font-size: smaller;
+}
+.wide-input {
+    max-width: 100% !important;
+}
+.multi-line-editor {
+    height: 210px !important;
+    overflow-y: scroll;
+    border: solid 1px gray;
+     max-width: 100% !important;
+}
+.client-config-subheader {
+    padding-top: 5px; 
+    border-bottom: solid 1px #eeeeee;
+    background-color: lightgray;
+}
+.aging-queue-container {
+    width: 100%;
+}
+
+/* bootstrap input-xs (since it doesn't actually exist */
+.input-xs {
+    height: 22px;
+    padding: 5px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.input-group-xs>.form-control,
+.input-group-xs>.input-group-addon,
+.input-group-xs>.input-group-btn>.btn {
+    height: 22px;
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.main-col {
+    min-width: 760px !important;
+    padding-top: 2px !important;
+}
+
+fieldset.fs-group, 
+div.fs-group {
+    border: solid 1px #396a97 !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+    border-radius: 4px;
+}
+
+legend.fs-group {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0px !important;
+    padding-bottom: 2px;
+}
+
+.section-header {
+    background-color: #396a97 !important;
+    color: white !important;
+}
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: #fff;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}
+.EditNote, .row-button {
+    cursor: pointer;
+    font-size: 16px !important;
+    padding-left: 2px; 
+}
+.bootstrap-select .btn {
+    padding: 4px !important;
+}
+.nav-tabs > li > a {
+    border-color: #eee #eee #ddd;
+    color: #747373;
+    background-color: #eee;
+}
+.nav-tabs > li > a:hover {
+    background-color: #396a97;
+    border-bottom-color: #ddd;
+    color: #fff;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    font-weight: bold;
+}
+.calc-field {
+    border: 1px solid #35cb10 !important;
+}
+.dv-type-container {
+    margin-top: -15px; 
+    background-color: #eee; 
+    border-radius: 4px; 
+    border: solid 1px #35cb10;
+}
+.dv-type-help {
+    border: 1px solid #ddd !important; 
+    border-radius: 4px !important; 
+    height: 26px !important; 
+    width: 20px !important; 
+    float: right !important;
+}
+.dvc-key-info {
+    font-size: 12px;
+    width: 100%;
+    border: 1px solid #396a97;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #fff;
+}
+.header-note {
+    font-weight: bold !important;
+    cursor: pointer !important;
+    background-color: #fafad2 !important; 
+    overflow: hidden !important;
+    font-size: 12px;
+    height: 22px;
+    max-width: 99% !important;
+}
+
+.diminished-value-header {
+    height: 22px !important; 
+    margin-top: 3px !important; 
+    background-color: #396a97 !important; 
+    color: white !important; 
+    border-radius: 4px 4px 0px 0px !important;
+    margin-left: 0px !important; 
+    margin-right: 0px !important; 
+    font-size: 12px !important;
+}
+.diminished-value-body {
+    border: solid 1px #396a97 !important; 
+    background-color: #fff !important; 
+    border-radius: 0px 0px 4px 4px !important;
+    padding: 5px !important;
+}
+i {
+    cursor: pointer;
+}
+.upload-file-name {
+    border: solid 1px #296a97;
+    background-color: #fff;
+    color: #000;
+    font-size: 14px;
+}
+.dvc-hide-spinner {
+    display: none;
+}
+.disabled-panel {
+    pointer-events: none;
+    opacity: 0.6;
+}
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width: 99% !important;
+}
+.bootstrap-select.btn-group .dropdown-menu {
+    z-index: 9999 !important;
+}
+.reassign-text {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.client-logo {
+    width: auto;
+    height: 8em;
+    position: absolute;
+    z-index: 1000;
+}
+
+.brand-logo {
+    width: auto;
+    height: 8em;
+    padding-bottom: 2em;
+}

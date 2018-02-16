@@ -1,0 +1,108 @@
+﻿@model VanWagenen.Dvc.Web.ViewModels.ClaimsPerUserViewModel
+
+<div class="row">
+    <div class="col-md-2">
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ClaimsPerUser.FirstOrDefault().AssigneeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ClaimsPerUser.FirstOrDefault().ClaimCount)
+                </th>
+            </tr>
+
+            @foreach (var item in Model.ClaimsPerUser)
+            {
+                <tr class="rowhover claimsPerUser">
+                    <td class="perUserAssignee">
+                        @Html.DisplayFor(modelItem => item.AssigneeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClaimCount)
+                    </td>
+                </tr>
+            }
+            <tr class="rowhover claimsPerUser">
+                <td class="perUserAssignee">Total</td>
+                <td>@Model.ClaimsPerUser.Sum(x => x.ClaimCount)</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-10">
+        @using (Html.BeginForm(Model.ReportName, "ManagerReports"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <!-- client & Brand Filter -->
+                <div class="form-group form-group-sm">
+                    @Html.Label("Client", htmlAttributes: new { @class = "control-label col-md-1" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SelectedClient, Model.ClientList, new { @class = "form-control clientFilterDropDown" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm brandDropDownContainer" style="display: none;">
+                    @Html.Label("Brand", htmlAttributes: new { @class = "control-label col-md-1" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SelectedBrand, Model.BrandList, new { @class = "form-control brandDropDown" })
+                    </div>
+                </div>
+
+                @if (Model.MinimumAge != null)
+                {
+                    <div class="form-group form-group-sm">
+                        @Html.LabelFor(model => model.MinimumAge, htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.MinimumAge, new { htmlAttributes = new { @class = "form-control", required = true } })
+                            @Html.ValidationMessageFor(model => model.MinimumAge, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        @Html.LabelFor(model => model.MaximumAge, htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.MaximumAge, new { htmlAttributes = new { @class = "form-control", required = true } })
+                            @Html.ValidationMessageFor(model => model.MaximumAge, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group form-group-sm">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", required = true, type = "date" } })
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", required = true, type = "date" } })
+                        </div>
+                    </div>
+                }
+                @if (Model.ReportName.Contains("Closed"))
+                {
+                    <div id="ClosedTypeDropdown" class="form-group form-group-sm">
+                        @Html.Label("Closed Type", htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("closedClaimsToRetreive", new SelectList(ViewBag.closedClaimsToRetreive, "Value", "Text"),  new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div id="ClosedReasonDropdown" class="form-group form-group-sm" style="display: none;">
+                        @Html.Label("Closed Reason", htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("closedReason", (IEnumerable<SelectListItem>)ViewBag.closedReason, "All Closed Reasons", new { @class = "form-control" })
+                        </div>
+                    </div>
+                }
+                <div class="form-group form-group-sm">
+                    <div class="col-md-offset-1 col-md-10">
+                        <input type="submit" value="Find Claims" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

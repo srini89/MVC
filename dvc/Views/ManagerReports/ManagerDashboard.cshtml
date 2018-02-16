@@ -1,0 +1,124 @@
+﻿@model VanWagenen.Dvc.Web.ViewModels.ClaimsPerUserViewModel
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="@Url.Content("~/Scripts/app/ManagerDashboard.js")"></script>
+}
+
+<h2>Manager Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().AssigneeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().PreprocessingCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().TotalOpenCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().CreatedCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().ClosedCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().ClosedWithRecoveryCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClaimsPerUserAndClaimType.FirstOrDefault().AmountCollected)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ClaimsPerUserAndClaimType)
+            {
+                if (item.AssigneeName != "System")
+                {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssigneeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PreprocessingCount)
+                            </td>
+                            <td style="border-right: 2px solid lightgray">
+                                @Html.DisplayFor(modelItem => item.TotalOpenCount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedCount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClosedCount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClosedWithRecoveryCount)
+                            </td>
+                            <td>
+                                @string.Format("{0:C}", item.AmountCollected)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-5">
+        @using (Html.BeginForm(Model.ReportName, "ManagerReports", FormMethod.Post, new { id = "Date-Range-Form"}))
+        {
+            <div class="row">
+                <div class="col-md-offset-1">
+                    @Html.Label("Client")
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-offset-1">
+                    @Html.DropDownListFor(model => model.SelectedClient, Model.ClientList, new { @class = "form-control", id = "Client-Dropdown" })
+                    <br />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-1">
+                    <button id="Manager-Dashboard-Yesterday" class="btn btn-default" type="button">Yesterday</button>
+                    <button id="Manager-Dashboard-SevenDays" class="btn btn-default" type="button">Last 7 Days</button>
+                    <button id="Manager-Dashboard-ThirtyDays" class="btn btn-default" type="button">Last 30 Days</button>
+                </div>
+                <br/>
+            </div>
+
+            <div class="row">
+
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", required = true, type = "date" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", required = true, type = "date" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-1 col-md-10">
+                            <input type="submit" value="Find Claims" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>

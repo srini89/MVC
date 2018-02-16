@@ -1,0 +1,103 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+@model VanWagenen.Dvc.Web.ViewModels.ManageUserViewModel
+<div class="page-header">
+    <h2>Manage Users</h2>
+</div>
+@Html.Partial("_BaseMessages")
+<div class="row" id="user-list">
+    <div class="table-button">
+        @Html.ActionLink("Add User", "CreateUser", "Admin", new { @SortBy = ViewBag.SortBy }, new { @class = "btn btn-default" })
+    </div>
+    @if (Model != null && Model.Assignees != null && Model.Assignees.Count > 0)
+    { 
+        <div class="admin-list-container">
+            <table class="user-list-table table table-striped table-hover table-bordered">
+                <tr>
+                    <th>Actions</th>
+                    <th>
+                        <span>
+                            @{  string dnSortTitle = "Sort Descending";
+                                string dnSortBy = "DomainName_Desc";
+                                if (ViewBag.SortBy == "" || ViewBag.SortBy == "DomainName_Desc")
+                                {
+                                    dnSortTitle = "Sort Ascending";
+                                    dnSortBy = "DomainName";
+                                }
+                            }
+                            <span class="table-icon" title="@dnSortTitle">@Html.FontAwesomeActionLink("", "UserList", "Admin", "fa-sort", new { SortBy = dnSortBy })</span>
+                        </span>
+                        <span>Domain Name</span>
+                    </th>
+                    <th>
+                        <span>
+                            @{  string fnSortTitle = "Sort Descending";
+                                string fnSortBy = "Name_Desc";
+                                if (ViewBag.SortBy == "" || ViewBag.SortBy == "Name_Desc")
+                                {
+                                    fnSortTitle = "Sort Ascending";
+                                    fnSortBy = "Name";
+                                }
+                            }
+                            <span class="table-icon" title="@fnSortTitle">@Html.FontAwesomeActionLink("", "UserList", "Admin", "fa-sort", new { SortBy = fnSortBy })</span>
+
+                        </span>
+                        <span>Full Name</span>
+                    </th>
+                    <th>
+                        <span>
+                            @{  string eSortTitle = "Sort Descending";
+                                string eSortBy = "Enabled_Desc";
+                                if (ViewBag.SortBy == "" || ViewBag.SortBy == "Enabled_Desc")
+                                {
+                                    eSortTitle = "Sort Ascending";
+                                    eSortBy = "Enabled";
+                                }
+                            }
+                            <span class="table-icon" title="@eSortTitle">@Html.FontAwesomeActionLink("", "UserList", "Admin", "fa-sort", new { SortBy = eSortBy })</span>
+
+                        </span>
+                        <span title="Status currently determines whether or not this user will be part of the round robin queue assignment">Status</span>
+                    </th>
+                    <th>Roles</th>
+                    <th>Clients</th>
+                </tr>
+                @foreach (var user in Model.Assignees)
+            {
+            <tr class="rowhover">
+                <td>
+                    <span class="table-icon" title="Edit User">@Html.FontAwesomeActionLink("", "UpdateUser", "Admin", "fa-pencil", new { assigneeId = user.Id, SortBy = ViewBag.SortBy })</span>
+                    @{  string title = "Change User's Status to Enabled";
+                            string faToggleIcon = "fa-circle-o";
+                            if (user.Enabled)
+                            {
+                                title = "Change User's Status to Disabled";
+                                faToggleIcon = "fa-dot-circle-o";
+                            }
+                    }
+                    <span class="table-icon" title="@title">@Html.FontAwesomeActionLink("", "ToggleUserStatus", "Admin", @faToggleIcon, new { assigneeId = user.Id, SortBy = ViewBag.SortBy })</span>
+
+                </td>
+                <td>@user.DomainName</td>
+                <td>@user.Name</td>
+                <td>
+                    @{ var status = user.Enabled ? "Enabled" : "Disabled" ; }
+                    <span>@status</span>
+                </td>
+                <td>
+                    @string.Join(", ", user.Roles.Select(r => r.RoleName ))
+                </td>
+                <td>
+                    @string.Join(", ",user.Clients.Select(cl => cl.Name))
+                </td>
+            </tr>
+            }
+            </table>
+        </div>
+    }
+    else
+    {   
+        <div>
+            <span class="error">No Users Exist.</span>
+        </div>
+    }
+</div>

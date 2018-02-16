@@ -1,0 +1,298 @@
+﻿@{
+    ViewBag.Title = "Work Queue";
+}
+@section Scripts {
+    <script src="~/Scripts/app/workQueueController.js"></script>
+    <script src="~/Scripts/app/WorkQueue.js"></script>
+}
+@section styles
+{
+    <link rel="stylesheet" href="~/Content/css/WorkQueue.css">
+}
+<div class="row" ng-app="app">
+    <div ng-controller="workQueueController as vm">
+
+        <div class="row" ng-show="vm.workQueueErrorMessage">
+            <div class="col-xs-12">
+                <div class="text-danger">{{ vm.workqueueErrorMessage }}</div>
+            </div>
+        </div>
+
+        <div id="NewQueue" class="col-lg-3 verticalLine" data-toggle="collapse">
+            <div>
+                <h4 id="NewQueueLabelExpanded">New&nbsp;</h4>
+                <h4 id="NewQueueLabelCollapsed"><span class="fa fa-plus-circle" href="#" data-toggle="tooltip" data-placement="auto-right" title="New"></span></h4>
+                <span class="badge">{{ vm.newClaims.length }}</span>
+                <h4 id="NewQueueCollapse" class="pull-right"><span class="fa fa-chevron-left"></span></h4>
+            </div>
+            <div class="newQueueHide">
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterCriteriaNew.selectedValue" ng-options="option.label for option in filterCriteriaNew.availableOptions track by option.name" ng-change="newClaimFilterChanged(filterCriteriaNew.selectedValue.name, filterClientsNew.selectedValue.value)"></select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterClientsNew.selectedValue" ng-options="option.name for option in filterClientsNew.availableOptions track by option.value" ng-change="newClaimFilterChanged(filterCriteriaNew.selectedValue.name, filterClientsNew.selectedValue.value)"></select>
+                    </div>
+                </div>
+                <div class="text-danger" ng-show="vm.newClaimsErrorMessage">{{ vm.newClaimsErrorMessage }}</div>
+                <div ng-show="vm.isNewClaimsBusy" class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
+                <div ng-hide="vm.newClaims.length > 0"><h2><small>No claims...</small></h2></div>
+                <table ng-show="vm.newClaims.length > 0 && !vm.isNewClaimsBusy" class="table table-hover">
+                    <tr ng-repeat="newClaim in vm.newClaims">
+                        <td ng-show="!newClaim.locked || (newClaim.locked && newClaim.recordLock.lockedBy == vm.loggedOnAssigneeId)" ng-click="viewClaimDetail('@Url.Content("/Claim/ViewClaim")', newClaim.id)">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    {{ newClaim.id }}
+                                </div>
+                                <div class="col-lg-7">
+                                    {{ newClaim.carrier }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    {{ newClaim.accident.date | date:'MM-dd-yyyy' }}
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-show="newClaim.locked && newClaim.recordLock.lockedBy != vm.loggedOnAssigneeId" title="claim is locked by {{ newClaim.lockedByName }}">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <span class="text-gray">{{ newClaim.id }}</span>
+                                </div>
+                                <div class="col-lg-6 text-gray">
+                                    <span class="text-gray">{{ newClaim.carrier }}</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <i class="fa fa-lock"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-5 text-gray">
+                                    <span class="text-gray">{{ newClaim.accident.date | date:'MM-dd-yyyy' }}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="InvestigationQueue" class="col-lg-3 verticalLine" data-toggle="collapse">
+            <div>
+                <h4 id="InvestigationQueueLabelExpanded">Investigation&nbsp;</h4>
+                <h4 id="InvestigationQueueLabelCollapsed"><span class="fa fa-search" href="#" data-toggle="tooltip" data-placement="auto-right" title="Investigation"></span></h4>
+                <span class="badge">{{ vm.investigationClaims.length }}</span>
+                <h4 id="InvestigationQueueCollapse" class="pull-right"><span class="fa fa-chevron-left"></span></h4>
+            </div>
+            <div class="investigationQueueHide">
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterCriteriaInvestigation.selectedValue" ng-options="option.label for option in filterCriteriaInvestigation.availableOptions track by option.name" ng-change="investigationClaimFilterChanged(filterCriteriaInvestigation.selectedValue.name, filterClientsInvestigation.selectedValue.value)"></select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterClientsInvestigation.selectedValue" ng-options="option.name for option in filterClientsInvestigation.availableOptions track by option.value" ng-change="investigationClaimFilterChanged(filterCriteriaInvestigation.selectedValue.name, filterClientsInvestigation.selectedValue.value)"></select>
+                    </div>
+                </div>
+                <div class="text-danger" ng-show="vm.investigationErrorMessage">{{ vm.investigationErrorMessage }}</div>
+                <div ng-show="vm.isInvestigationClaimsBusy" class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
+                <div ng-hide="vm.investigationClaims.length > 0">
+                    <h2>
+                        <small>No claims...</small>
+                    </h2>
+                </div>
+                <table ng-show="vm.investigationClaims.length > 0 && !vm.isInvestigationClaimsBusy" class="table table-hover">
+                    <tr ng-repeat="investigationClaim in vm.investigationClaims">
+                        <td ng-show="!investigationClaim.locked || (investigationClaim.locked && investigationClaim.recordLock.lockedBy == vm.loggedOnAssigneeId)" ng-click="viewClaimDetail('@Url.Content("/Claim/ViewClaim")', investigationClaim.id)">
+                            <div class="row">
+                                <div class="col-lg-1 work-queue-column" ng-hide="investigationClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-phone-square fa-2x" title="Follow up required"></i>
+                                </div>
+                                <div class="col-lg-1 work-queue-column" ng-show="investigationClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-file-text-o file-icon" title="New document attached"></i>
+                                </div>
+                                <div class="col-lg-11">
+                                    <div class="row">
+                                        <div class="col-lg-3"> {{ investigationClaim.id }}</div>
+                                        <div class="col-lg-5">{{ investigationClaim.carrier }}</div>
+                                        <div class="col-lg-4">{{ investigationClaim.age }} day(s)</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12"> {{investigationClaim.pendingWaitDate | date: 'MM/dd'}} - {{ investigationClaim.claimWorkflowStates[0].reason}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-show="investigationClaim.locked && investigationClaim.recordLock.lockedBy != vm.loggedOnAssigneeId" title="claim is locked by {{ investigationClaim.lockedByName }}">
+                            <div class="row">
+                                <div class="col-lg-1 work-queue-column" ng-hide="investigationClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-phone-square fa-2x text-gray" title="Follow up required"></i>
+                                </div>
+                                <div class="col-lg-1 work-queue-column" ng-show="investigationClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-file-text-o file-icon-disabled" title="New document attached"></i>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-3 text-gray"> {{ investigationClaim.id }}</div>
+                                        <div class="col-lg-5 text-gray">{{ investigationClaim.carrier }}</div>
+                                        <div class="col-lg-4 text-gray">{{ investigationClaim.age }} day(s)</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-gray"> {{investigationClaim.pendingWaitDate | date: 'MM/dd'}} - {{ investigationClaim.claimWorkflowStates[0].reason}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <i class="fa fa-lock"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="NegotiateQueue" class="col-lg-3 verticalLine">
+            <div>
+                <h4 id="NegotiateQueueLabelExpanded">Negotiate&nbsp;</h4>
+                <h4 id="NegotiateQueueLabelCollapsed"><span class="fa fa-handshake-o" href="#" data-toggle="tooltip" data-placement="auto-right" title="Negotiate"></span></h4>
+                <span class="badge">{{ vm.negotiateClaims.length }}</span>
+                <h4 id="NegotiateQueueCollapse" class="pull-right"><span class="fa fa-chevron-left"></span></h4>
+            </div>
+            <div class="negotiateQueueHide">
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterCriteriaNegotiate.selectedValue" ng-options="option.label for option in filterCriteriaNegotiate.availableOptions track by option.name" ng-change="negotiateClaimFilterChanged(filterCriteriaNegotiate.selectedValue.name, filterClientsNegotiate.selectedValue.value)"></select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterClientsNegotiate.selectedValue" ng-options="option.name for option in filterClientsNegotiate.availableOptions track by option.value" ng-change="negotiateClaimFilterChanged(filterCriteriaNegotiate.selectedValue.name, filterClientsNegotiate.selectedValue.value)"></select>
+                    </div>
+                </div>
+                <div class="text-danger" ng-show="vm.negotiateErrorMessage">{{ vm.negotiateErrorMessage }}</div>
+                <div ng-show="vm.isNegotiateClaimsBusy" class="text-center">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+                <div ng-hide="vm.negotiateClaims.length > 0">
+                    <h2>
+                        <small>No claims...</small>
+                    </h2>
+                </div>
+                <table ng-show="vm.negotiateClaims.length > 0 && !vm.isNegotiateClaimsBusy" class="table table-hover">
+                    <tr ng-repeat="negotiateClaim in vm.negotiateClaims">
+                        <td ng-show="!negotiateClaim.locked || (negotiateClaim.locked && negotiateClaim.recordLock.lockedBy == vm.loggedOnAssigneeId)" ng-click="viewClaimDetail('@Url.Content("/Claim/ViewClaim")', negotiateClaim.id)">
+                            <div class="row">
+                                <div class="col-lg-1 work-queue-column" ng-hide="negotiateClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-phone-square fa-2x" title="Follow up required"></i>
+                                </div>
+                                <div class="col-lg-1 work-queue-column" ng-show="negotiateClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-file-text-o file-icon" title="New document attached"></i>
+                                </div>
+                                <div class="col-lg-11">
+                                    <div class="row">
+                                        <div class="col-lg-3"> {{ negotiateClaim.id }}</div>
+                                        <div class="col-lg-5">{{ negotiateClaim.carrier }}</div>
+                                        <div class="col-lg-4">{{ negotiateClaim.age }} day(s)</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">{{negotiateClaim.pendingWaitDate | date: 'MM/dd'}} - {{ negotiateClaim.claimWorkflowStates[0].reason }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-show="negotiateClaim.locked && negotiateClaim.recordLock.lockedBy != vm.loggedOnAssigneeId" title="claim is locked by {{ negotiateClaim.lockedByName }}">
+                            <div class="row">
+                                <div class="col-lg-1 work-queue-column" ng-hide="negotiateClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-phone-square fa-2x text-gray" title="Follow up required"></i>
+                                </div>
+                                <div class="col-lg-1 work-queue-column" ng-show="negotiateClaim.claimWorkflowStates[0].trigger == 'DocumentAttached'">
+                                    <i class="fa fa-file-text-o file-icon-disabled" title="New document attached"></i>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-3 text-gray"> {{ negotiateClaim.id }}</div>
+                                        <div class="col-lg-5 text-gray">{{ negotiateClaim.carrier }}</div>
+                                        <div class="col-lg-4 text-gray">{{ negotiateClaim.age }} day(s)</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-gray">{{negotiateClaim.pendingWaitDate | date: 'MM/dd'}} - {{ negotiateClaim.claimWorkflowStates[0].reason }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <i class="fa fa-lock"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="ChecksQueue" class="col-lg-3">
+            <div>
+                <h4 id="ChecksQueueLabelExpanded">Checks Received&nbsp;</h4>
+                <h4 id="ChecksQueueLabelCollapsed"><span class="fa fa-money" href="#" data-toggle="tooltip" data-placement="auto-right" title="Checks Received"></span></h4>
+                <span class="badge">{{ vm.checksReceivedClaims.length }}</span>
+                <h4 id="ChecksQueueCollapse" class="pull-right"><span class="fa fa-chevron-left"></span></h4>
+            </div>
+            <div class="checksQueueHide">
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterCriteriaChecksReceived.selectedValue" ng-options="option.label for option in filterCriteriaChecksReceived.availableOptions track by option.name" ng-change="checksReceivedClaimFilterChanged(filterCriteriaChecksReceived.selectedValue.name, filterClientsChecksReceived.selectedValue.value)"></select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="filterClientsChecksReceived.selectedValue" ng-options="option.name for option in filterClientsChecksReceived.availableOptions track by option.value" ng-change="checksReceivedClaimFilterChanged(filterCriteriaChecksReceived.selectedValue.name, filterClientsChecksReceived.selectedValue.value)"></select>
+                    </div>
+                </div>
+                <div class="text-danger" ng-show="vm.checksReceivedErrorMessage">{{ vm.checksReceivedErrorMessage }}</div>
+                <div ng-show="vm.isChecksReceivedClaimsBusy" class="text-center">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+                <div ng-hide="vm.checksReceivedClaims.length > 0">
+                    <h2>
+                        <small>No claims...</small>
+                    </h2>
+                </div>
+                <table ng-show="vm.checksReceivedClaims.length > 0 && !vm.isChecksReceivedClaimsBusy" class="table table-hover">
+                    <tr ng-repeat="checksReceivedClaim in vm.checksReceivedClaims">
+                        <td ng-show="!checksReceivedClaim.locked || (checksReceivedClaim.locked && checksReceivedClaim.recordLock.lockedBy == vm.loggedOnAssigneeId)" ng-click="viewClaimDetail('@Url.Content("/Claim/ViewClaim")', checksReceivedClaim.id)">
+                            <div class="row">
+                                <div class="col-lg-1 work-queue-column">
+                                    <i class="fa fa-file-text-o file-icon" title="Document(s) ready"></i>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-3"> {{ checksReceivedClaim.id }}</div>
+                                        <div class="col-lg-5">{{ checksReceivedClaim.carrier }}</div>
+                                        <div class="col-lg-4">{{ checksReceivedClaim.age }} day(s)</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">{{checksReceivedClaim.pendingWaitDate | date: 'MM/dd'}} - {{ checksReceivedClaim.claimWorkflowStates[0].reason }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-show="checksReceivedClaim.locked && checksReceivedClaim.recordLock.lockedBy != vm.loggedOnAssigneeId" title="claim is locked by {{ checksReceivedClaim.lockedByName }}">
+                            <div class="row">
+                                <div class="col-lg-1 work-queue-column">
+                                    <i class="fa fa-file-text-o file-icon-disabled" title="New document attached"></i>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-3 text-gray"> {{ checksReceivedClaim.id }}</div>
+                                        <div class="col-lg-5 text-gray">{{ checksReceivedClaim.carrier }}</div>
+                                        <div class="col-lg-4 text-gray">{{ checksReceivedClaim.age }} day(s)</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-gray">{{checksReceivedClaim.pendingWaitDate | date: 'MM/dd'}} - {{ checksReceivedClaim.claimWorkflowStates[0].reason }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <i class="fa fa-lock"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

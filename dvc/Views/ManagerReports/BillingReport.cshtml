@@ -1,0 +1,166 @@
+﻿@model VanWagenen.Dvc.Web.ViewModels.BillingReportViewModel
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/app/ManagerReports.js")"></script>
+}
+
+<div class="billing-report">
+    @using (Html.BeginForm("BillingReport", "ManagerReports"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="report-filter-section">
+            <div class="report-filter">
+                @Html.Label("Client")
+                @Html.DropDownListFor(model => model.ClientId, Model.ClientList, new { @class = "selectpicker", title = "Choose a client..." })
+                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "error" })
+            </div>
+            <div class="report-filter">
+                <label>Billing Period: </label>
+                @Html.EditorFor(model => model.BillingDate, new { htmlAttributes = new { @class = "form-control billingPeriod billing-report-filter", required = true } })
+            </div>
+            <div class="report-button">
+                <button id="btnSubmit" type="submit" name="Command" value="Submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="report-message">
+                @if (!string.IsNullOrEmpty(Model.BillingReportModel.Status))
+                {
+                    <div class="report-status">@Model.BillingReportModel.Status</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.BillingReportModel.ErrorMessage))
+                {
+                    <div class="error">@Model.BillingReportModel.ErrorMessage</div>
+                } else
+                {
+                    <div class="space">&nbsp;</div>
+                }
+            </div>
+            <div class="post-billing-button">
+                <button id="btnPost" type="submit" name="Command" value="PostBilling" class="btn btn-default" title="Post Billing for this time period.  Note: Claim invoice record will be updated and report will be emailed to Accounting.">Post Billing</button>
+            </div>
+            <div class="clear-both"></div>
+        </div>
+    }
+    @if (Model.BillingReportModel.BillingReport != null && Model.BillingReportModel.BillingReport.Count > 0)
+    {
+        //report will be displayed here if it exists
+        <div id="reportHeader" class="report-header">
+            @Model.BillingReportModel.BillingReport[0].ClientNo @Model.BillingReportModel.BillingReport[0].ClientName - Period Ending @Model.BillingDate<br />
+            Diminished Value Claims
+        </div>
+        <table id="ReportTable" class="table table-striped table-fixed report-table">
+            <thead>
+                <tr class="fixed-header-row">
+                    <th class="col-xs-1">
+                        @Html.Label("ClaimNo")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Account No")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Lesee Name")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("VIN")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Claim Opened")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Claim Closed")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Check Received")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Check Remitted")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Recovery Amount")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Processing Charge")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Invoice Date")
+                    </th>
+                    <th class="col-xs-1">
+                        @Html.Label("Invoice Amount")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.BillingReportModel.BillingReport)
+                {
+                    <tr class="rowhover" title="click to view this claim." onclick="location.href = '@(Url.Action("ViewClaim", "Claim", new { id = row.ClaimId }))'">
+                        <td class="col-xs-1 font-smaller">
+                            @Html.DisplayFor(modelItem => row.ClaimNumber)<br/>
+                            <span class="text-gray">(Client File Id:  @Html.DisplayFor(modelItem => row.ClientFileId))</span>
+                        </td>
+                        <td class="col-xs-1">
+                            @{
+                                string clientNoTruncated = !string.IsNullOrEmpty(row.AccountNumber) ? row.AccountNumber.Substring((row.AccountNumber.Length - 8), 8) : "";
+                            }
+                            @clientNoTruncated
+                        </td>
+                        <td class="col-xs-1 font-smaller">
+                            @Html.DisplayFor(modelItem => row.LesseeName)
+                        </td>
+                        <td class="col-xs-1 font-smaller">
+                            @Html.DisplayFor(modelItem => row.VIN)
+                        </td>
+                        <td class="col-xs-1">
+                            @row.ClaimOpenDate.ToShortDateString()
+
+                        </td>
+                        <td class="col-xs-1">
+                            @row.ClaimCloseDate.ToShortDateString()
+                        </td>
+                        <td class="col-xs-1">
+                            @if (row.CheckReceivedDate != null)
+                            {
+                                @row.CheckReceivedDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td class="col-xs-1">
+                            @if (row.CheckRemittedDate != null)
+                            {
+                                @row.CheckRemittedDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td class="col-xs-1">
+                            @row.RecoveryAmount.ToString("C")
+                        </td>
+                        <td class="col-xs-1">
+                            @row.ProcessingCharge.ToString("C")
+                        </td>
+                        <td class="col-xs-1">
+                            @if (row.InvoicingDate != null)
+                            {
+                                @row.InvoicingDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td class="col-xs-1">
+                            @row.InvoiceAmount.ToString("C")
+                        </td>
+                    </tr>
+                }
+                <!-- totals row  -->
+                <tr>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1 report-total">Totals: </td>
+                    <td class="col-xs-1 report-total">@Model.BillingReportModel.BillingReport.Sum(br => br.RecoveryAmount).ToString("C")</td>
+                    <td class="col-xs-1 report-total">@Model.BillingReportModel.BillingReport.Sum(br => br.ProcessingCharge).ToString("C")</td>
+                    <td class="col-xs-1"></td>
+                    <td class="col-xs-1 report-total">@Model.BillingReportModel.BillingReport.Sum(br => br.InvoiceAmount).ToString("C")</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    </div>

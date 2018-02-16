@@ -1,0 +1,152 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+@using VanWagenen.Dvc.Repository.Models
+
+@model VanWagenen.Dvc.Web.ViewModels.AddEditContactViewModel
+@section Scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        toggleNameTextBoxes();
+    });
+
+    function toggleNameTextBoxes() {
+        if ($('#ClaimsDepartment').is(":checked")) {
+            $('#FirstName').prop('disabled', true);
+            $('#LastName').prop('disabled', true);
+        } else {
+            $('#FirstName').prop('disabled', false);
+            $('#LastName').prop('disabled', false);
+        }
+    }
+    $('.phoneNumberMask').mask('000-000-0000');
+</script>
+
+<div id="target">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">@ViewBag.Title</h4>
+    </div>
+    @Html.Partial("_BaseMessages")
+    @using (Ajax.BeginForm("AddOrUpdateClaimContact", "Claim",
+                                        new AjaxOptions
+                                        {
+                                            HttpMethod = "POST",
+                                            UpdateTargetId = "target",
+                                            OnSuccess= "OnAddContactSuccess()"
+                                        }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("claimId", (object)ViewBag.ClaimId)
+        @Html.Hidden("contactId", (object)ViewBag.ContactId)
+        @Html.HiddenFor(model => model.RowVersion)
+        @Html.HiddenFor(model => model.Id)
+        <div class="modal-body">
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.Label("Type:")
+                        @Html.DropDownListFor(model => model.ContactTypeId, Model.ContactTypes, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Carrier:")
+                        @Html.TextBoxFor(model => model.Carrier, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Carrier, "", new { @class = "error" })
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.CheckBoxFor(m => m.ClaimsDepartment, new { onchange = "toggleNameTextBoxes()" })
+                        @Html.Label("Claims Department")
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.Label("First Name:")
+                        @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Last Name:")
+                        @Html.TextBoxFor(model => model.LastName, new { @class="form-control" })
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.Label("Address Line 1:")
+                        @Html.TextBoxFor(model => model.Address1, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Address Line 2:")
+                        @Html.TextBoxFor(model => model.Address2, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.Label("City:")
+                        @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("State:")
+                        @*@Html.DropDownListFor(model => model.State, SelectListItemHelper.GetStateList(), new { @class = "selectpicker", data_live_search = "true" })*@
+                        @Html.DropDownListFor(model => model.State, SelectListItemHelper.GetStateList(), new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Zip:")
+                        @Html.TextBoxFor(model => model.ZipCode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.Label("Phone:")
+                        @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control phoneNumberMask", @required = "required", pattern = ".{12,}", title = "Number must have 10 digits" })
+                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "error" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Extension:")
+                        @Html.TextBoxFor(model => model.PhoneExtension, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Fax:")
+                        @Html.TextBoxFor(model => model.FaxNumber, new { @class = "form-control phoneNumberMask", pattern = ".{0}|.{12,}", title = "Fax must have 10 digits" })
+                        @Html.ValidationMessageFor(model => model.FaxNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-xs-4">
+                        @Html.Label("Email:")
+                        @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.Label("Active:")
+                        @Html.CheckBoxFor(model => model.Active)
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="FaxNumberYesNo" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:35px 50px;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Warning!</h4>
+            </div>
+            <div class="modal-body" style="padding:40px 50px;">
+                <p>Duplicate contacts found on several other claims. Do you want to update all contacts?</p>
+                <p>Click Yes to update all claims, No to only update this claim, or Cancel to abort update.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" id="UpdateAllFaxNums">Yes</button>
+                <button class="btn btn-default" id="UpdateThisFaxNum">No</button>
+                <button class="btn btn-error" id="CancelContactUpdate" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

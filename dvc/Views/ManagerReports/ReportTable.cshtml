@@ -1,0 +1,177 @@
+﻿@model IEnumerable<VanWagenen.Dvc.Web.ViewModels.ManagerReportsViewModel>
+
+<table id="ReportTable" class="table table-striped table-hover" style="border-top: thin solid gainsboro">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ClaimId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VIN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Make)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Odometer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClaimStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DaysAged)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClaimCreateDate)
+            </th>
+            @if (!ViewBag.claimsPerUser.ReportName.Contains("Open") && !ViewBag.claimsPerUser.ReportName.Contains("Aged"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.ClaimClosedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ClosedReason)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.DiminishedValueClaimAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OriginalSettlementOffer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NegotiatedSettlementOffer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepairEstimate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FairMarketValue)
+            </th>
+            @if (!ViewBag.claimsPerUser.ReportName.Contains("New"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.AmountCollected)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AirBagDeployed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TowedFromScene)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AtFaultParty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssigneeName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="rowhover" onclick="location.href = '@(Url.Action("ViewClaim", "Claim", new { id = item.ClaimId }))'">
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClaimId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VIN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Make)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Odometer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClaimStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DaysAged)
+                </td>
+                <td>
+                    @item.ClaimCreateDate.ToShortDateString()
+                </td>
+                @if (!ViewBag.claimsPerUser.ReportName.Contains("Open") && !ViewBag.claimsPerUser.ReportName.Contains("Aged"))
+                {
+                    <td>
+                        @(item.ClaimClosedDate?.ToShortDateString())
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClosedReason)
+                    </td>
+                }
+                <td>
+                    @string.Format("{0:C}", item.DiminishedValueClaimAmount)
+                </td>
+                <td>
+                    @string.Format("{0:C}", item.OriginalSettlementOffer)
+                </td>
+                <td>
+                    @string.Format("{0:C}", item.NegotiatedSettlementOffer)
+                </td>
+                <td>
+                    @string.Format("{0:C}", item.RepairEstimate)
+                </td>
+                <td>
+                    @string.Format("{0:C}", item.FairMarketValue)
+                </td>
+                @if (!ViewBag.claimsPerUser.ReportName.Contains("New"))
+                {
+                    <td>
+                        @string.Format("{0:C}", item.AmountCollected)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AirBagDeployed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TowedFromScene)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AtFaultParty)
+                </td>
+                <td class="assigneeName">
+                    @Html.DisplayFor(modelItem => item.AssigneeName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

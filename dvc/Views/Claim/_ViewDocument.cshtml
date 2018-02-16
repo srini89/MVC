@@ -1,0 +1,133 @@
+﻿@using VanWagenen.Dvc.Repository.Models
+@model VanWagenen.Dvc.Web.ViewModels.UpdateClaimViewModel
+@if ((Model.Documents != null && Model.Documents.Any()) || (Model.Checks != null && Model.Checks.Any()))
+{
+    if (Model.Documents.Any(doc => doc.ErrorMessage != ""))
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <h4 class="error">@Model.Documents.First(doc => doc.ErrorMessage != "").ErrorMessage</h4>
+            </div>
+        </div>
+    }
+    <div class="row form-group form-group-sm">
+        @using (Ajax.BeginForm("FaxDocuments", "Claim",
+            new AjaxOptions
+            {
+                HttpMethod = "Post",
+                UpdateTargetId = "dvDocumentResults",
+                OnSuccess = "OnFaxDocumentSuccess()",
+                OnFailure = "OnFaxDocumentFailure()"
+            }, new { @class = "faxDocumentForm" }))
+        {
+            if (Model.Documents != null)
+            {
+                <div class="col-xs-6" style="min-width: 593px;">
+                    <table id="documentTable" class="table table-striped">
+                        <tr>
+                            <th>Actions</th>
+                            <th>Type</th>
+                            <th>Upload Date</th>
+                            <th>Upload User</th>
+                        </tr>
+                        @for (int i = 0; i < Model.Documents.Count; i++)
+                    {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("DownloadDocument", "Claim", new { id = Model.Documents[i].Document.Id })">
+                                <i class="more-less fa fa-download row-button" title="Open Document" data-toggle="tooltip"></i>
+                            </a>
+                            @if (Model.CanEditClaim)
+                            {
+                                @Html.CheckBoxFor(m => m.Documents[i].Selected, new {title="Select to Fax", data_toggle="tooltip" })
+                                <span class="EditDocument" id="EditDocumentType" name="EditDocumentType" data-toggle="modal" data-id="@Model.Documents[i].Document.Id" 
+                                      data-documentType="@Model.Documents[i].Document.DocumentType" data-otherTypeDescription="@Model.Documents[i].Document.OtherTypeDescription">
+                                    <i class="fa fa-pencil-square-o row-button" title="Change Document Type" data-toggle="tooltip"></i>
+                                </span>
+                                if (Model.UserIsManager)
+                                {
+                                    <span class="DeleteDocument" id="DeleteDocument" title="Delete Document" data-toggle="tooltip" name="DeleteDocument" data-docid="@Model.Documents[i].Document.Id" data-claimid="@Model.Claim.Id">
+                                        <i class="fa fa-trash row-button"></i>
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <i class="fa fa-pencil-square-o text-muted row-button"></i>
+                                if (Model.UserIsManager)
+                                {
+                                    <i class="fa fa-trash text-muted row-button"></i>
+                                }
+                            }
+                        </td>
+                        <td class="docType">
+                            @Model.Documents[i].DocumentDescription
+                            @if ((Model.Documents[i].Document.DocumentType == 10 || Model.Documents[i].Document.DocumentType == 16) && !string.IsNullOrWhiteSpace(Model.Documents[i].Document.OtherTypeDescription))
+                            {
+                                <span>- @Model.Documents[i].Document.OtherTypeDescription</span>
+                            }
+                        </td>
+                        <td>@Model.Documents[i].Document.UploadedDate.ToShortDateString()</td>
+                        <td>@Model.Documents[i].Document.UploadedUser</td>
+                    </tr>
+                    @Html.HiddenFor(model => model.Documents[i].ClaimId)
+                    @Html.HiddenFor(model => model.Documents[i].DocumentId)
+                    }
+                    </table>
+                </div>
+            }
+
+            //Faxing
+            <div id="faxDocumentModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Fax Document</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <label for="formGroupInputLarge1" class="col-sm-10 control-label">Fax Document(s) for Claim @Model.Claim.Id </label>
+                            </div>
+                            <div class="row">
+                                <label for="formGroupInputLarge1" class="col-sm-3 control-label">Documents Selected:</label>
+                                <div class="col-sm-4">
+                                    <div id="selectedDocumentsToFax" class="col-sm-12" style="padding-left: 0em;">
+                                        @* Added in viewClaim.js under "Populate fax screen with selected documents." *@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="formGroupInputLarge1" class="col-sm-3 control-label">Contact:</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(model => model.Contact.Id, Model.ValidFaxContact, new { @class = "form-control" })
+                                    <h6 style="font-weight:bold;">Only contacts with a fax number will be displayed.</h6>
+                                </div>
+                                
+                            </div>
+                            <div class="row form-group">
+                                <label for="formGroupInputLarge1" class="col-sm-3 control-label">Description: </label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(model => model.FaxDescription, new { @class = "form-control", @maxlength = "200" })
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="formGroupInputLarge1" class="col-sm-3 control-label">Message: </label>
+                                <div class="col-sm-9">
+                                    @Html.TextAreaFor(model => model.FaxMessage, new { @class = "form-control", @maxlength = "2000" })
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                @Html.HiddenFor(model => model.Claim.Id)
+                                @*@Html.HiddenFor(model => model.Checks)
+                                    @Html.HiddenFor(model => model.Documents)*@
+                                <input type="submit" class="FaxDocument btn btn-default" name="FaxDocument" id="FaxDocument" value="Fax" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

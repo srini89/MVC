@@ -1,0 +1,168 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+@using VanWagenen.Dvc.Repository.Models
+
+@model VanWagenen.Dvc.Web.ViewModels.CreateClaimViewModel
+
+@section Scripts{
+    <script src="~/Scripts/app/preprocessingClaim.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.validate*"></script>
+}
+<div class="container">
+    <div class="col-sm-6">
+        <h4>Create Claim for VIN @Model.Claim.Vehicle.VIN</h4> 
+        <hr />
+        @using (Html.BeginForm("AddClaim", "Preprocessing", new { vin = Model.Claim.Vehicle.VIN}, FormMethod.Post, new { @class = "form-vertical", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Claim.Id)
+            @Html.HiddenFor(model => model.Claim.ClaimState)
+            @*@Html.HiddenFor(model => model.Claim.Vehicle.VIN)*@
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                @Html.LabelFor(model => model.Claim.PoliceCaseNumber, "Police Case:")
+            </div>
+            <div class="form-group">
+                @Html.EditorFor(model => model.Claim.PoliceCaseNumber)
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                   @Html.LabelFor(model => model.Contact.ContactTypeId, "Type")
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Claim.Carrier)
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(model => model.Contact.ContactTypeId, SelectListItemHelper.GetContactTypes())
+                </div>
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Claim.Carrier)
+                    @Html.ValidationMessageFor(model => model.Claim.Carrier, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.ClaimsDepartment)@Html.LabelFor(model => model.Contact.ClaimsDepartment, "Claims Department")
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.FirstName, "First Name:")
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.LastName, "Last Name:")
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-4">
+                   @Html.EditorFor(model => model.Contact.FirstName)
+                </div>
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.LastName)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.Address1, "Address Line 1:")
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.Address2, "Address Line 2:")
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.Address1)
+                </div>
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.Address2)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.City , "City:")
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.State, "Accident State:")
+                </div>
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.ZipCode, "Zip:")
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.City)
+                </div>
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(model => model.Contact.State, SelectListItemHelper.GetStateList())
+                </div>
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.ZipCode)
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.PhoneNumber, "Phone:")
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.FaxNumber, "Fax:")
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.PhoneNumber)
+                    @Html.ValidationMessageFor(model => model.Contact.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.FaxNumber)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Contact.EmailAddress , "Email:")
+                </div>
+               
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.Contact.EmailAddress)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Claim.FactsOfLoss, "Facts of Loss:")
+                </div>
+
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(model => model.Claim.FactsOfLoss, new { @class = "col-sm-12", @style = "width:100%; height:10em;"})
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.CheckBoxFor(model => model.Claim.TowedFromSite) @Html.LabelFor(model => model.Claim.TowedFromSite, "Towed from site") 
+            </div>
+
+            <div class="form-group">
+                @Html.CheckBoxFor(model => model.Claim.AirbagsDeployed) @Html.LabelFor(model => model.Claim.AirbagsDeployed, "Airbags deployed")
+            </div>
+            @Html.HiddenFor(model => model.ClientVehicleId)
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />               
+            </div>
+        }
+    </div>
+</div>

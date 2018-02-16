@@ -1,0 +1,88 @@
+﻿#NewQueueCollapse, 
+#InvestigationQueueCollapse, 
+#NegotiateQueueCollapse, 
+#ChecksQueueCollapse {
+    cursor: pointer;
+    color: cadetblue;
+    display: inline-block;
+}
+
+#NewQueueLabelExpanded,
+#InvestigationQueueLabelExpanded,
+#NegotiateQueueLabelExpanded,
+#ChecksQueueLabelExpanded {
+    display: inline-block;
+}
+
+#NewQueueLabelCollapsed,
+#InvestigationQueueLabelCollapsed,
+#NegotiateQueueLabelCollapsed,
+#ChecksQueueLabelCollapsed {
+    display: none;
+}
+
+#NewQueueCollapse:hover, 
+#InvestigationQueueCollapse:hover, 
+#NegotiateQueueCollapse:hover, 
+#ChecksQueueCollapse:hover {
+    color: lightblue;
+}
+
+/*Collapse*/
+#NewQueue.active, 
+#InvestigationQueue.active, 
+#NegotiateQueue.active, 
+#ChecksQueue.active {
+    transition: width .5s, display .5s;
+    width: 5em;
+    text-align: center;
+}
+
+/*Hide stuff on collapse*/
+#NewQueue.active .newQueueHide, 
+#InvestigationQueue.active .investigationQueueHide, 
+#NegotiateQueue.active .negotiateQueueHide, 
+#ChecksQueue.active .checksQueueHide {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.5s, opacity 0.5s linear;
+}
+
+#NewQueue.active #NewQueueLabelExpanded,
+#InvestigationQueue.active #InvestigationQueueLabelExpanded,
+#NegotiateQueue.active #NegotiateQueueLabelExpanded,
+#ChecksQueue.active #ChecksQueueLabelExpanded {
+    display: none;
+}
+
+/*Show other stuff while collapsed*/
+#NewQueue.active #NewQueueLabelCollapsed,
+#InvestigationQueue.active #InvestigationQueueLabelCollapsed,
+#NegotiateQueue.active #NegotiateQueueLabelCollapsed,
+#ChecksQueue.active #ChecksQueueLabelCollapsed {
+    font-size: 2em;
+    color:#4286f4;
+    display: block;
+}
+
+#NewQueue.active #NewQueueCollapse, 
+#InvestigationQueue.active #InvestigationQueueCollapse, 
+#NegotiateQueue.active #NegotiateQueueCollapse, 
+#ChecksQueue.active #ChecksQueueCollapse {
+    transform: rotate(180deg);
+    font-size: 2em;
+    transition: transform .5s, font-size .5s;
+}
+
+/*Expand*/
+#NewQueue, #InvestigationQueue, #NegotiateQueue, #ChecksQueue {
+    transition: width .5s;
+}
+
+/*Show stuff on expand*/
+#NewQueue .newQueueHide, 
+#InvestigationQueue .investigationQueueHide, 
+#NegotiateQueue .negotiateQueueHide, 
+#ChecksQueue .checksQueueHide {
+    transition: visibility 0.5s, opacity 0.5s linear;
+}

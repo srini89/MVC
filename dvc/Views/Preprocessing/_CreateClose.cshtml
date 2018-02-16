@@ -1,0 +1,34 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+
+@model VanWagenen.Dvc.Web.ViewModels.PreprocessingItemsViewModel
+<div class="container">
+    <div class="col-sm-6">
+        <h4>Close No Claim for VIN @Model.VIN</h4>
+        <hr />
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="error">@Model.ErrorMessage</div>
+            <a href="@Url.Action("Index", "Preprocessing")" title="Exit">
+                <span title="Return to Preprocessing Queue" class="btn btn-default">Exit</span>
+            </a>
+        }
+        else
+        {
+            using (Html.BeginForm("CloseClaim", "Preprocessing", FormMethod.Post, new { @class = "form-vertical", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Reason, "Close:")
+                    @Html.DropDownListFor(model => model.ReasonId, Model.Reasons)
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+        }
+    </div>
+</div>

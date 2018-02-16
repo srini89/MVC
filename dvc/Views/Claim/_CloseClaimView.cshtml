@@ -1,0 +1,55 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+@using VanWagenen.Dvc.Repository.Models
+@model VanWagenen.Dvc.Web.ViewModels.CloseClaimViewModel
+<div id="target">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Close Claim @Model.ClaimId</h4>
+    </div>
+    @using (Ajax.BeginForm("CloseClaimView", "Claim",
+                                        new AjaxOptions
+                                        {
+                                            HttpMethod = "POST",
+                                            InsertionMode = InsertionMode.ReplaceWith,
+                                            UpdateTargetId = "target",
+                                            OnSuccess = "location.reload()"
+                                        }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ClaimId)
+        <div class="modal-body">
+            @if (!string.IsNullOrEmpty(ViewBag.Exception))
+            {
+                <div>
+                    @ViewBag.Exception
+                </div>
+            }
+            <div class="row form-group form-group-sm">
+                <div class="col-xs-8">
+                    @Html.LabelFor(model => model.Reason, "Reason")
+                    @Html.DropDownListFor(model => model.Reason, Model.Reasons, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @if (Model.AllowClose)
+            {
+                <button type="submit" class="btn btn-success">Close</button>
+            }
+            else
+            {
+                <span class="btn btn-success disabled" data-toggle="tooltip" data-container="body" title="Negotiated amount does not match checks received amount.">Close</span>
+            }
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+    }
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[rel=tooltip]').tooltip({ container: 'body' });
+        });
+    </script>
+</div>

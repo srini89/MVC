@@ -1,0 +1,19 @@
+﻿@model IEnumerable<VanWagenen.Dvc.Web.ViewModels.ManagerReportsViewModel>
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/app/ManagerReports.js")"></script>
+}
+
+<br />
+<h3>Open Claims: User Counts</h3>
+@{
+    var claimsPerUser = (VanWagenen.Dvc.Web.ViewModels.ClaimsPerUserViewModel)ViewBag.claimsPerUser;
+    Html.RenderPartial("ClaimsPerUser", claimsPerUser);
+}
+<br />
+
+<div class="row">
+    <h3 class="col-md-2">Open Claims</h3>
+    <button id="ExportToExcel" class="btn btn-default col-md-offset-9" style="float: right; margin-right: 15px;">Export to Excel</button>
+</div>
+@Html.Partial("ReportTable", Model)

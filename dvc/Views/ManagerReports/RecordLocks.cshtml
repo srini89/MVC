@@ -1,0 +1,106 @@
+﻿@using VanWagenen.Dvc.Web.Helpers
+@model VanWagenen.Dvc.Web.ViewModels.ManageLocksViewModel
+<div class="page-header">
+    <h2>Manage Record Locks</h2>
+</div>
+@Html.Partial("_BaseMessages")
+
+<div class="table-button">
+    @Html.ActionLink("Unlock All Records", "UnlockAllRecords", "ManagerReports", new { @class = "btn btn-default" })
+    @Html.ActionLink("Unlock Expired Records", "UnlockExpiredRecords", "ManagerReports", new { @class = "btn btn-default" })
+
+</div>
+
+<!-- Locked Claims -->
+<div class="record-lock-container">
+    <div id="record-lock-list">
+        <div class="admin-list-container">
+            <h4>Locked Claims</h4>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th class="col-md-1">Unlock</th>
+                    <th class="col-md-3">Claim Id</th>
+                    <th class="col-md-3">Locked By</th>
+                    <th class="col-md-4">Last Updated</th>
+                    <th class="col-md-1">Expired</th>
+                </tr>
+                @if (Model != null && Model.LockedClaims != null && Model.LockedClaims.Count > 0)
+                {
+                    foreach (var lockedClaim in Model.LockedClaims)
+                    {
+                        <tr>
+                            <td title="Unlock this Claim" class="col-md-1" style="font-size: 18px; text-align: center;">
+                                @Html.FontAwesomeActionLink("", "UnlockRecord", "ManagerReports", "fa-unlock", new { recordId = lockedClaim.ClaimId, recordType = "Claim" })
+                            </td>
+                            <td class="col-md-3">@lockedClaim.ClaimId</td>
+                            <td class="col-md-3">@lockedClaim.LockedByName</td>
+                            <td class="col-md-4">@lockedClaim.LastUpdatedUtc.ToLocalTime()</td>
+                            <td class="col-md-1" style="text-align: center;">
+                                @if (lockedClaim.Expired)
+                                {
+                                    <span title="This lock has expired and will be accessible in the work queue" style="color: darkorange;" class="glyphicon glyphicon-ok"></span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">
+                            <span class="error">No Locked Claims Exist.</span>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Locked Preprocessing Records -->
+<div class="record-lock-container">
+    <div id="record-lock-list">
+        <div class="admin-list-container">
+            <h4>Locked VINs (Preprocessing)</h4>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th class="col-md-1">Unlock</th>
+                    <th class="col-md-3">VIN</th>
+                    <th class="col-md-3">Locked By</th>
+                    <th class="col-md-4">Last Updated</th>
+                    <th class="col-md-1">Expired</th>
+                </tr>
+                @if (Model != null && Model.LockedClientVehicles != null && Model.LockedClientVehicles.Count > 0)
+                {
+                    foreach (var lockedCv in Model.LockedClientVehicles)
+                    {
+                        <tr>
+                            <td title="Unlock this VIN" class="col-md-1" style="font-size: 18px; text-align: center;">
+                                @Html.FontAwesomeActionLink("", "UnlockRecord", "ManagerReports", "fa-unlock fa-x4", new { recordId = lockedCv.ClientVehicleId, recordType = "ClientVehicle", vin = lockedCv.VIN })
+                            </td>
+                            <td class="col-md-3">@lockedCv.VIN</td>
+                            <td class="col-md-3">@lockedCv.LockedByName</td>
+                            <td class="col-md-4">@lockedCv.LastUpdatedUtc.ToLocalTime()</td>
+                            <td class="col-md-1" style="text-align: center;">
+                                @if (lockedCv.Expired)
+                                {
+                                    <span title="This lock has expired and will be accessible in the preprocessing queue" style="color: darkorange;" class="glyphicon glyphicon-ok"></span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="rowhover">
+                        <td colspan="5">
+                            <span class="error">No Locked VINs Exist.</span>
+                        </td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<div class="clear-both"></div>
+

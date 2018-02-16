@@ -1,0 +1,18 @@
+﻿@model VanWagenen.Dvc.Web.ViewModels.BaseViewModel
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="error"><span id="page-error">@Html.Raw(Model.ErrorMessage)</span></h4>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="report-status"><span id="page-status">@Html.Raw(Model.StatusMessage)</span></h4>
+        </div>
+    </div>
+}
+
